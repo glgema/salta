@@ -8,9 +8,6 @@ public class Aplication extends Game {
 	@Override
 	public void create () {
 		((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen());
-
-
-
 	}
 
 	@Override

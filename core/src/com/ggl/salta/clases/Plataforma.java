@@ -6,8 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import static com.ggl.salta.MainScreen.PPM;
-
+import static com.ggl.salta.GameScreen.PPM;
 
 public class Plataforma extends Sprite{
 
@@ -17,7 +16,7 @@ public class Plataforma extends Sprite{
         super(texture);
         this.rect = new Rectangle(pos.x,pos.y,texture.getWidth() / PPM,texture.getHeight() / PPM);
         super.setRegion(new TextureRegion(getTexture(),0,0,getTexture().getWidth(),getTexture().getHeight()));
-        super.setPosition(pos.x,pos.y);
         setBounds(0,0,getTexture().getWidth() / PPM,getTexture().getHeight() / PPM);
+        super.setPosition(pos.x,pos.y);
     }
 }
