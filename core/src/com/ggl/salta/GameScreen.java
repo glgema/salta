@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.ggl.salta.clases.Enemigo;
 import com.ggl.salta.clases.Moneda;
 import com.ggl.salta.clases.Personaje;
 import com.ggl.salta.clases.Plataforma;
@@ -43,9 +44,11 @@ public class GameScreen implements Screen {
     Texture texturePlataforma;
     Texture texturePlataformaRota;
     Texture textureMoneda;
+    Texture textEnemigo;
     Personaje personaje;
     Array<Plataforma> plataformas;
     Array<Moneda> monedas;
+    Array<Enemigo> enemigos;
     int altura;
     int contMonedas = 0;
 
@@ -82,8 +85,6 @@ public class GameScreen implements Screen {
         texturasFondos.add(new Texture("fondo2.png"));
         texturasFondos.add(new Texture("fondo3.png"));
 
-
-
         camera = new OrthographicCamera();
 
         float w = Gdx.graphics.getWidth();
@@ -92,13 +93,11 @@ public class GameScreen implements Screen {
         //camera.setToOrtho(false, (TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM, (TILES_IN_CAMERA_HEIGHT * TILE_WIDTH) / PPM );
         camera.setToOrtho(false, (TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM, ((TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM)  * (Gdx.graphics.getHeight()/Gdx.graphics.getWidth()) );
 
-
         camera.update();
 
         map = new TmxMapLoader().load("endless.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / PPM);
         batch = renderer.getBatch();
-
 
         texturePersonaje = new Texture(Gdx.files.internal("pelota.png"),true);
         texturePersonaje.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
@@ -108,7 +107,7 @@ public class GameScreen implements Screen {
 
         textureMoneda = new Texture(Gdx.files.internal("trofeo.png"),true);
         textureMoneda.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
-
+        textEnemigo = new Texture(Gdx.files.internal("guantes.png"),true);
 
         world = new World(new Vector2(0,-10f),true);
         b2dr = new Box2DDebugRenderer();
@@ -116,6 +115,7 @@ public class GameScreen implements Screen {
         personaje = new Personaje(texturePersonaje,new Vector2(32,32), world);
         plataformas = new Array<>();
         monedas = new Array<>();
+        enemigos = new Array<>();
         altura = 0;
     }
 
@@ -171,6 +171,20 @@ public class GameScreen implements Screen {
         }
     }
 
+    public void generarEnemigo(){
+        Vector2 pos = null;
+        int dir = 0;
+        if(enemigos.size<1) {
+            if (MathUtils.randomBoolean()) {
+                dir = 1;
+                pos = new Vector2(camera.position.x - camera.viewportWidth / 2- textEnemigo.getWidth() / PPM, MathUtils.random(camera.position.y, camera.position.y + camera.viewportHeight / 2));
+            } else
+                pos = new Vector2(camera.position.x + camera.viewportWidth / 2, MathUtils.random(camera.position.y, camera.position.y + camera.viewportHeight / 2));
+
+            enemigos.add(new Enemigo(pos, textEnemigo, dir));
+        }
+    }
+
     public void generarFondoInicial(){
 
         int anchoFondo = Math.round(texturasFondos.get(cont).getWidth() / PPM);
@@ -187,7 +201,6 @@ public class GameScreen implements Screen {
             cont = 0;
 
     }
-
 
     public void generarPlataformasInicio(){
         // todo arreglar esta puta basura
@@ -210,7 +223,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        actualizar();
+        actualizar(delta);
         pintar();
     }
 
@@ -238,8 +251,10 @@ public class GameScreen implements Screen {
         for (Moneda moneda : monedas)
             moneda.draw(batch);
 
-        batch.end();
+        for(Enemigo enemigo : enemigos)
+            enemigo.draw(batch);
 
+        batch.end();
 
         batchHUD.begin();
 
@@ -255,7 +270,7 @@ public class GameScreen implements Screen {
 
     private void handleCamera() {
 
-        ///
+        //
         if(personaje.b2body.getPosition().y > camera.position.y)
             camera.position.set(new Vector2(camera.position.x,personaje.b2body.getPosition().y ),0);
 
@@ -272,27 +287,21 @@ public class GameScreen implements Screen {
         altura = Math.round(camera.position.y * 10);
     }
 
-    public void actualizar(){
+    public void actualizar(float delta){
         b2dr.render(world, camera.combined);
         world.step(1/60f,6,2);
-
-
 
         // Alinea el sprite del pj al body de box2d
         personaje.setPosition(personaje.b2body.getPosition().x - personaje.getWidth()/2, personaje.b2body.getPosition().y - personaje.getHeight()/2);
         personaje.rect.setPosition(personaje.getX(),personaje.getY());
 
-
         //
         if (Gdx.input.justTouched())
             personaje.saltar();
 
-
-
         // SUELO
         if(personaje.b2body.getPosition().y <= (camera.position.y - camera.viewportHeight/2))
             personaje.saltar();
-
 
         // gravedad segun giro
         int vg=round( Gdx.input.getAccelerometerX());
@@ -321,6 +330,12 @@ public class GameScreen implements Screen {
                 plataformas.removeValue(plataforma,false);
         }
 
+        for(Enemigo enemigo : enemigos){
+            enemigo.movimiento(delta);
+            if(enemigo.getY() <= (camera.position.y - camera.viewportHeight/2))
+                enemigos.removeValue(enemigo, false);
+        }
+
         for (Moneda moneda : monedas){
             if(moneda.rect.overlaps(personaje.rect)) {
                 monedas.removeValue(moneda, false);
@@ -330,15 +345,15 @@ public class GameScreen implements Screen {
                 monedas.removeValue(moneda,false);
         }
 
-
-
         for(Sprite fondo : fondos)
             if(fondo.getY() + fondo.getTexture().getWidth()/ PPM <= (camera.position.y - camera.viewportHeight/2))
                 fondos.removeValue(fondo,false);
 
+
         //
         generarPlataformas();
         generarFondo();
+        generarEnemigo();
     }
 
     @Override
