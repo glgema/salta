@@ -2,11 +2,12 @@ package com.ggl.salta;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -15,24 +16,38 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.ggl.salta.clases.Moneda;
 import com.ggl.salta.clases.Personaje;
 import com.ggl.salta.clases.Plataforma;
 
-import static java.lang.Math.round;
+import static java.lang.Math.*;
 
 public class GameScreen implements Screen {
+
+    // HUD
+    private BitmapFont fontAltura;
+    private BitmapFont fontContMonedas;
+
+    private FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/LemonMilk.otf"));
+    private FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    private SpriteBatch batchHUD;
+
 
     // constantes
     int TILE_WIDTH = 64;
     int TILES_IN_CAMERA_WIDTH = 9;
-    int TILES_IN_CAMERA_HEIGHT = 15;
+    int TILES_IN_CAMERA_HEIGHT = 19;
     public static float PPM = 100;
 
     Texture texturePersonaje;
     Texture texturePlataforma;
+    Texture texturePlataformaRota;
+    Texture textureMoneda;
     Personaje personaje;
     Array<Plataforma> plataformas;
-
+    Array<Moneda> monedas;
+    int altura;
+    int contMonedas = 0;
 
     // FONDO
     Array<Texture> texturasFondos = new Array<>();
@@ -51,7 +66,16 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
 
 
+    int size = (int)(Gdx.graphics.getHeight() * 0.025f);
+    int border = (int)(Gdx.graphics.getHeight() * 0.003f);
     public GameScreen(){
+        // HUD
+        parameter.size = this.size;
+        parameter.color = Color.WHITE;
+        parameter.borderWidth = this.border;
+        fontAltura = generator.generateFont(parameter);
+        fontContMonedas = generator.generateFont(parameter);
+        batchHUD = new SpriteBatch();
 
         // fondos
         texturasFondos.add(new Texture("fondo1.png"));
@@ -62,7 +86,13 @@ public class GameScreen implements Screen {
 
         camera = new OrthographicCamera();
 
-        camera.setToOrtho(false, (TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM, (TILES_IN_CAMERA_HEIGHT * TILE_WIDTH) / PPM);
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
+
+        //camera.setToOrtho(false, (TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM, (TILES_IN_CAMERA_HEIGHT * TILE_WIDTH) / PPM );
+        camera.setToOrtho(false, (TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM, ((TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM)  * (Gdx.graphics.getHeight()/Gdx.graphics.getWidth()) );
+
+
         camera.update();
 
         map = new TmxMapLoader().load("endless.tmx");
@@ -70,24 +100,59 @@ public class GameScreen implements Screen {
         batch = renderer.getBatch();
 
 
-        texturePersonaje = new Texture("pelota.png");
-        texturePlataforma = new Texture("plataforma.png");
+        texturePersonaje = new Texture(Gdx.files.internal("pelota.png"),true);
+        texturePersonaje.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
+
+        texturePlataforma = new Texture(Gdx.files.internal("plataforma.png"),true);
+        texturePlataformaRota = new Texture("plataforma2.png");
+
+        textureMoneda = new Texture(Gdx.files.internal("trofeo.png"),true);
+        textureMoneda.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
+
 
         world = new World(new Vector2(0,-10f),true);
         b2dr = new Box2DDebugRenderer();
 
         personaje = new Personaje(texturePersonaje,new Vector2(32,32), world);
         plataformas = new Array<>();
+        monedas = new Array<>();
+        altura = 0;
     }
 
+    float alturaUltimaPlat;
     public void generarPlataformas(){
         if(plataformas.size < 4)
-            for(int i = 0 ; i < 5 ; i++)
-                plataformas.add(new Plataforma(new Vector2(MathUtils.random(0,camera.viewportWidth - texturePlataforma.getWidth() / PPM),(camera.position.y + camera.viewportHeight/2) + 3f * i),texturePlataforma));
+            for(int i = 0 ; i < 5 ; i++) {
+                float platX = MathUtils.random(0, camera.viewportWidth - texturePlataforma.getWidth() / PPM);
+                //float platY = alturaUltimaPlat + camera.viewportHeight/3;
+                float platY = alturaUltimaPlat + personaje.rect.getHeight()*5;
+
+                int tipoPlat;
+                tipoPlat = MathUtils.random(0,4);
+
+
+                Plataforma plat;
+                if(MathUtils.randomBoolean())
+                    plat = new Plataforma(new Vector2(platX, platY), texturePlataforma, false, tipoPlat);
+                else
+                    plat = new Plataforma(new Vector2(platX, platY), texturePlataformaRota, true, tipoPlat);
+                plataformas.add(plat);
+
+                alturaUltimaPlat = platY;
+
+                // generar monedas
+                if(MathUtils.randomBoolean()){
+                    float x = plat.getX() + plat.getWidth()/2 - textureMoneda.getWidth()/ PPM / 4;
+                    float y = plat.getY() + plat.getHeight() * 2 ;
+                    monedas.add(new Moneda(new Vector2(x,y),textureMoneda ));
+                }
+                
+            }
     }
 
+
     int cont = 0;
-    float altura;
+    float alturaUltimoFondo;
     public void generarFondo(){
 
 
@@ -96,10 +161,10 @@ public class GameScreen implements Screen {
         if(fondos.size < 3){
             Sprite sprite = new Sprite(texturasFondos.get(cont),0,0,anchoFondo,anchoFondo);
 
-            sprite.setPosition(camera.position.x - camera.viewportWidth/2,altura + anchoFondo);
+            sprite.setPosition(camera.position.x - camera.viewportWidth/2,alturaUltimoFondo + anchoFondo);
             fondos.add(sprite);
 
-            altura = sprite.getY();
+            alturaUltimoFondo = sprite.getY();
 
             if(++cont == 3)
                 cont = 0;
@@ -116,7 +181,7 @@ public class GameScreen implements Screen {
         sprite.setPosition(camera.position.x - camera.viewportWidth/2,camera.position.y - camera.viewportHeight/2);
         fondos.add(sprite);
 
-        altura = sprite.getY();
+        alturaUltimoFondo = sprite.getY();
 
         if(++cont == 3)
             cont = 0;
@@ -125,12 +190,16 @@ public class GameScreen implements Screen {
 
 
     public void generarPlataformasInicio(){
+        // todo arreglar esta puta basura
+
         for(int i = 1 ; i < 3 ; i++)
-            plataformas.add(new Plataforma(new Vector2(MathUtils.random(0, camera.viewportWidth - texturePlataforma.getWidth() / PPM), (personaje.b2body.getPosition().y) + 0.9f * i), texturePlataforma));
+            plataformas.add(new Plataforma(new Vector2(MathUtils.random(0, camera.viewportWidth - texturePlataforma.getWidth() / PPM), (personaje.b2body.getPosition().y) + 0.9f * i), texturePlataforma , false, 0));
 
 
-        for(int i = 1 ; i < 6 ; i++)
-            plataformas.add(new Plataforma(new Vector2(MathUtils.random(0, camera.viewportWidth - texturePlataforma.getWidth() / PPM), (personaje.b2body.getPosition().y) + 3f * i), texturePlataforma));
+        for(int i = 1 ; i < 6 ; i++) {
+            plataformas.add(new Plataforma(new Vector2(MathUtils.random(0, camera.viewportWidth - texturePlataforma.getWidth() / PPM), (personaje.b2body.getPosition().y) + 3f * i), texturePlataforma, false,0));
+            alturaUltimaPlat = (personaje.b2body.getPosition().y) + 3f * i;
+        }
     }
 
     @Override
@@ -166,9 +235,23 @@ public class GameScreen implements Screen {
         for (Plataforma plataforma : plataformas)
             plataforma.draw(batch);
 
+        for (Moneda moneda : monedas)
+            moneda.draw(batch);
+
         batch.end();
 
+
+        batchHUD.begin();
+
+        // HUD
+        fontAltura.draw(batchHUD, altura+" m",x , y);
+        batchHUD.draw(textureMoneda, 50, Gdx.graphics.getHeight() - 200);
+        fontContMonedas.draw(batchHUD, "" + contMonedas, 150,  Gdx.graphics.getHeight() - 150);
+
+        batchHUD.end();
     }
+    float x = Gdx.graphics.getWidth() * 0.05f;
+    float y = Gdx.graphics.getHeight() - Gdx.graphics.getHeight() * 0.025f;
 
     private void handleCamera() {
 
@@ -176,9 +259,17 @@ public class GameScreen implements Screen {
         if(personaje.b2body.getPosition().y > camera.position.y)
             camera.position.set(new Vector2(camera.position.x,personaje.b2body.getPosition().y ),0);
 
+        ///caida
+        /*
+        if(personaje.b2body.getPosition().y < camera.position.y - camera.viewportHeight/2)
+            camera.position.y -= 5/PPM;
+*/
 
         camera.update();
         renderer.setView(camera);
+
+
+        altura = Math.round(camera.position.y * 10);
     }
 
     public void actualizar(){
@@ -189,10 +280,13 @@ public class GameScreen implements Screen {
 
         // Alinea el sprite del pj al body de box2d
         personaje.setPosition(personaje.b2body.getPosition().x - personaje.getWidth()/2, personaje.b2body.getPosition().y - personaje.getHeight()/2);
+        personaje.rect.setPosition(personaje.getX(),personaje.getY());
+
 
         //
         if (Gdx.input.justTouched())
             personaje.saltar();
+
 
 
         // SUELO
@@ -212,12 +306,31 @@ public class GameScreen implements Screen {
             personaje.b2body.setTransform(camera.position.x - camera.viewportWidth/2,personaje.b2body.getPosition().y,0);
 
         // remove
-        for (Plataforma plataforma : plataformas){
-            if(plataforma.rect.contains(new Vector2(personaje.b2body.getPosition().x,personaje.b2body.getPosition().y - 35 / PPM)) && personaje.b2body.getLinearVelocity().y <= 0)
+        for (Plataforma plataforma : plataformas) {
+            if (plataforma.rect.contains(new Vector2(personaje.b2body.getPosition().x, personaje.b2body.getPosition().y - 35 / PPM)) && personaje.b2body.getLinearVelocity().y <= 0){
                 personaje.saltar();
+                if(plataforma.rectPowerups!= null ) {
+                    if (personaje.rect.overlaps(plataforma.rectPowerups)) {
+                        personaje.cogerPorwerups(plataforma.tipo);
+                    }
+                }
+                if (plataforma.seBorra())
+                plataformas.removeValue(plataforma, false);
+            }
             if(plataforma.getY() <= (camera.position.y - camera.viewportHeight/2))
                 plataformas.removeValue(plataforma,false);
         }
+
+        for (Moneda moneda : monedas){
+            if(moneda.rect.overlaps(personaje.rect)) {
+                monedas.removeValue(moneda, false);
+                contMonedas = contMonedas + 1;
+            }
+            if(moneda.getY() <= (camera.position.y - camera.viewportHeight/2))
+                monedas.removeValue(moneda,false);
+        }
+
+
 
         for(Sprite fondo : fondos)
             if(fondo.getY() + fondo.getTexture().getWidth()/ PPM <= (camera.position.y - camera.viewportHeight/2))
@@ -226,12 +339,14 @@ public class GameScreen implements Screen {
         //
         generarPlataformas();
         generarFondo();
-        System.out.println("TAMAÑO ARRAYY "+plataformas.size);
     }
 
     @Override
-    public void resize(int width, int height) {
-
+    public void resize(int width, int height){
+        //camera.viewportWidth = width/ (bestI*bestJ);
+        camera.viewportHeight = camera.viewportWidth * height/width;
+        camera.position.set(new Vector2(camera.viewportWidth/2f , camera.viewportHeight/2f),0);
+        camera.update();
     }
 
     @Override

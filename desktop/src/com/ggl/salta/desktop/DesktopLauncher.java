@@ -7,8 +7,8 @@ import com.ggl.salta.Aplication;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.height = 80;
-		config.width = 80;
+		config.height = 1280;
+		config.width = 720;
 		new LwjglApplication(new Aplication(), config);
 	}
 }
