@@ -3,9 +3,13 @@ package com.ggl.salta;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -16,17 +20,18 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
+        Skin skin = new Skin(Gdx.files.internal("skins/neonui/neon-ui.json"));;
 
         if (!VisUI.isLoaded())
             VisUI.load();
 
         stage = new Stage();
 
-        VisTable table = new VisTable(true);
+        VisTable table = new VisTable(false);
         table.setFillParent(true);
         stage.addActor(table);
 
-        VisTextButton playButton = new VisTextButton("JUGAR");
+        TextButton playButton = new TextButton("JUGAR",skin);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -35,7 +40,7 @@ public class MainScreen implements Screen {
             }
         });
 
-        VisTextButton quitButton = new VisTextButton("AJUSTES");
+        TextButton quitButton = new TextButton("AJUSTES",skin);
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
