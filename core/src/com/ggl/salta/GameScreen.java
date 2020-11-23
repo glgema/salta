@@ -1,5 +1,6 @@
 package com.ggl.salta;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
@@ -15,14 +16,13 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.ggl.salta.clases.Enemigo;
-import com.ggl.salta.clases.Moneda;
-import com.ggl.salta.clases.Personaje;
-import com.ggl.salta.clases.Plataforma;
+import com.ggl.salta.clases.*;
 
 import static java.lang.Math.*;
 
 public class GameScreen implements Screen {
+
+
 
     // HUD
     private BitmapFont fontAltura;
@@ -240,10 +240,12 @@ public class GameScreen implements Screen {
 
         batchHUD.begin();
 
+        float widthMoneda = Gdx.graphics.getWidth()*0.06f;
         // HUD
         fontAltura.draw(batchHUD, altura+" m",x , y);
-        batchHUD.draw(textureMoneda, 50, Gdx.graphics.getHeight() - 200);
-        fontContMonedas.draw(batchHUD, "" + contMonedas, 150,  Gdx.graphics.getHeight() - 150);
+        batchHUD.draw(textureMoneda, Gdx.graphics.getWidth() * 0.05f, y - Gdx.graphics.getHeight()*0.06f,widthMoneda,widthMoneda );
+        fontContMonedas.draw(batchHUD, "" + contMonedas, Gdx.graphics.getWidth() * 0.07f + widthMoneda,  y - Gdx.graphics.getHeight()*0.035f );
+
 
         batchHUD.end();
     }
@@ -289,8 +291,14 @@ public class GameScreen implements Screen {
         }
 
         // SUELO
-        if(personaje.b2body.getPosition().y <= (camera.position.y - camera.viewportHeight/2))
-            personaje.saltar();
+        if((personaje.b2body.getPosition().y <= (camera.position.y - camera.viewportHeight/2)) )
+            if((camera.position.y - camera.viewportHeight/2) > 0) {
+                Aplication.db.addTrofeos(contMonedas);
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver());
+            }
+            else
+                personaje.saltar();
+
 
         // gravedad segun giro
         int vg=round( Gdx.input.getAccelerometerX());

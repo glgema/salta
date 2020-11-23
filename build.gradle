@@ -11,8 +11,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.0'
-        
-
     }
 }
 
@@ -50,7 +48,8 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        
+        implementation group:'org.xerial', name:'sqlite-jdbc', version:'3.32.3.2'
+
     }
 }
 
@@ -80,6 +79,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
+        implementation group:'org.xerial', name:'sqlite-jdbc', version:'3.32.3.2'
 
         
     }
@@ -98,5 +98,7 @@ project(":core") {
         implementation "com.kotcrab.vis:vis-ui:$visuiVersion"
         implementation "com.esotericsoftware:kryonet:2.22.0-RC1"
         implementation 'com.android.support:multidex:1.0.3'
+        implementation group:'org.xerial', name:'sqlite-jdbc', version:'3.32.3.2'
+
     }
 }

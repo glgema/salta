@@ -3,26 +3,22 @@ package com.ggl.salta;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.ggl.salta.clases.Database;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
-public class MainScreen implements Screen {
-    private Stage stage;
+public class GameOver implements Screen {
 
+
+    private Stage stage;
 
     @Override
     public void show() {
-        Skin skin = new Skin(Gdx.files.internal("skins/neonui/neon-ui.json"));
 
         if (!VisUI.isLoaded())
             VisUI.load();
@@ -33,7 +29,7 @@ public class MainScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
 
-        TextButton playButton = new TextButton("JUGAR",skin);
+        VisTextButton playButton = new VisTextButton("Volver a jugar");
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -42,11 +38,11 @@ public class MainScreen implements Screen {
             }
         });
 
-        TextButton quitButton = new TextButton("AJUSTES",skin);
+        VisTextButton quitButton = new VisTextButton("Inicio");
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.exit(0);
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen());
                 dispose();
                 VisUI.dispose();
                 // Salir del juego
@@ -74,8 +70,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // Redimensiona la escena al redimensionar la ventana del juego
-        stage.getViewport().update(width, height);
+
     }
 
     @Override
@@ -95,7 +90,6 @@ public class MainScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Libera los recursos de la escena
         stage.dispose();
     }
 }
