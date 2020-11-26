@@ -30,6 +30,7 @@ public class ChoosePjScreen implements Screen {
     private BitmapFont fontPrecio;
     Texture textureMoneda;
 
+    Aplication game;
     VisImage image;
 
     int contador;
@@ -37,8 +38,6 @@ public class ChoosePjScreen implements Screen {
     private FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/LemonMilk.otf"));
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     private SpriteBatch batchHUD;
-
-
 
 
     @Override
@@ -51,11 +50,12 @@ public class ChoosePjScreen implements Screen {
         stage = new Stage();
 
         aspectos = new Array<>();
-        aspectos.add(new Aspecto(0,true, new Texture("pj1.png")));
-        aspectos.add(new Aspecto(50,false, new Texture("pj2.png")));
-        aspectos.add(new Aspecto(100,false, new Texture("pj3.png")));
-        aspectos.add(new Aspecto(150,false, new Texture("pj4.png")));
-
+        aspectos.add(new Aspecto(0,true, new Texture("elegirPelotas/pj1.png")));
+        aspectos.add(new Aspecto(50,false, new Texture("elegirPelotas/pj2.png")));
+        aspectos.add(new Aspecto(100,false, new Texture("elegirPelotas/pj3.png")));
+        aspectos.add(new Aspecto(150,false, new Texture("elegirPelotas/pj4.png")));
+        aspectos.add(new Aspecto(150,false, new Texture("elegirPelotas/pj5.png")));
+        
         contador = Aplication.db.getSelection();
         image = new VisImage(aspectos.get(contador).getTexture());
 
@@ -78,7 +78,6 @@ public class ChoosePjScreen implements Screen {
         fontPrecio = generator.generateFont(parameter);
         batchHUD = new SpriteBatch();
 
-
         VisTextButton bAceptar = new VisTextButton("Aceptar");
             bAceptar.addListener(new ClickListener() {
             @Override
@@ -90,15 +89,13 @@ public class ChoosePjScreen implements Screen {
                 dispose();
                 VisUI.dispose();
             }
-
-
         });
 
         VisTextButton bAtras = new VisTextButton("Atras");
         bAtras.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen(game));
                 dispose();
                 VisUI.dispose();
             }
@@ -132,15 +129,13 @@ public class ChoosePjScreen implements Screen {
         float pad = Gdx.graphics.getWidth() * 0.025f;
         table.row();
         table.add(bIzquierda).width(Gdx.graphics.getWidth()*0.1f).height(Gdx.graphics.getWidth()*0.1f).pad(pad).padTop(pad*20);
-        table.add(image).width(Gdx.graphics.getWidth()*0.65f).height(Gdx.graphics.getWidth()*0.65f).pad(pad).padTop(pad*20);
+        table.add(image).width(Gdx.graphics.getWidth()*0.5f).height(Gdx.graphics.getWidth()*0.5f).pad(pad).padTop(pad*20);
         table.add(bDerecha).width(Gdx.graphics.getWidth()*0.1f).height(Gdx.graphics.getWidth()*0.1f).pad(pad).padTop(pad*20);
         table.row().colspan(3);
         table.add(bAceptar).width(Gdx.graphics.getWidth()*0.5f).height(Gdx.graphics.getWidth()*0.2f).pad(pad).padTop(pad*5);
         table.row().colspan(3);
         table.add(bAtras).width(Gdx.graphics.getWidth()*0.5f).height(Gdx.graphics.getWidth()*0.2f).pad(pad);
         Gdx.input.setInputProcessor(stage);
-
-
 
         trofeos = Aplication.db.getTrofeos();
     }

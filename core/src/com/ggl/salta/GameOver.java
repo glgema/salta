@@ -16,7 +16,7 @@ public class GameOver implements Screen {
 
 
     private Stage stage;
-
+    Aplication game;
     @Override
     public void show() {
 
@@ -42,7 +42,7 @@ public class GameOver implements Screen {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen(game));
                 dispose();
                 VisUI.dispose();
                 // Salir del juego

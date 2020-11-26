@@ -6,6 +6,7 @@ import com.ggl.salta.clases.Database;
 
 public class Aplication extends Game {
 
+	public Boolean isMultiReady;
 	public static Database db;
 	public Aplication(Database db){
 		this.db = db;
@@ -14,7 +15,8 @@ public class Aplication extends Game {
 
 	@Override
 	public void create () {
-		((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen());
+		super.setScreen(new SplashScreen(this));
+		isMultiReady = false;
 	}
 
 	@Override

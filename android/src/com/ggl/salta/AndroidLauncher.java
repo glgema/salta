@@ -13,7 +13,7 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
 		//initialize(new Aplication(), config);
-		initialize(new Aplication(new DatabaseAndroid(this.getBaseContext())));
+		initialize(new Aplication(new DatabaseAndroid(this.getBaseContext())),config);
 
 	}
 }

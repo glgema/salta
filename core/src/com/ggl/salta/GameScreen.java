@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.ggl.salta.clases.*;
 
+import static com.ggl.salta.SplashScreen.personajes;
 import static java.lang.Math.*;
 
 public class GameScreen implements Screen {
@@ -77,7 +78,7 @@ public class GameScreen implements Screen {
         batchHUD = new SpriteBatch();
 
         // fondos
-        fondoTexture = new Texture("fondo.png");
+        fondoTexture = SplashScreen.fondos.get(Aplication.db.getSelection());
         fondosArray = new Array<>();
 
         camera = new OrthographicCamera();
@@ -107,7 +108,7 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0,-10f),true);
         b2dr = new Box2DDebugRenderer();
 
-        personaje = new Personaje(texturePersonaje,new Vector2(32,32), world);
+        personaje = new Personaje(personajes.get(Aplication.db.getSelection()),new Vector2(32,32), world);
         plataformas = new Array<>();
         monedas = new Array<>();
         enemigos = new Array<>();
@@ -137,7 +138,7 @@ public class GameScreen implements Screen {
                 // generar monedas
                 if(MathUtils.randomBoolean()){
                     float x = plat.getX() + plat.getWidth()/2 - textureMoneda.getWidth()/ PPM / 4;
-                    float y = plat.getY() + plat.getHeight() * 2 ;
+                    float y = plat.getY() + plat.getHeight() * 4 ;
                     monedas.add(new Moneda(new Vector2(x,y),textureMoneda ));
                 }
                 
@@ -225,10 +226,10 @@ public class GameScreen implements Screen {
         for (Sprite fondo : fondosArray)
             fondo.draw(batch);
 
-        personaje.draw(batch);
-
         for (Plataforma plataforma : plataformas)
             plataforma.draw(batch);
+
+        personaje.draw(batch);
 
         for (Moneda moneda : monedas)
             moneda.draw(batch);
@@ -258,11 +259,6 @@ public class GameScreen implements Screen {
         if(personaje.b2body.getPosition().y > camera.position.y)
             camera.position.set(new Vector2(camera.position.x,personaje.b2body.getPosition().y ),0);
 
-        ///caida
-        /*
-        if(personaje.b2body.getPosition().y < camera.position.y - camera.viewportHeight/2)
-            camera.position.y -= 5/PPM;
-*/
         camera.update();
         renderer.setView(camera);
 
