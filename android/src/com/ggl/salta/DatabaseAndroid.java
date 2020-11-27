@@ -73,7 +73,6 @@ public class DatabaseAndroid extends Database {
 
         @Override
         public int getInt(int columnIndex) {
-            System.out.println("ddñdñdñdñdñdñdñdñ : " + columnIndex);
             return cursor.getInt(columnIndex);
         }
 

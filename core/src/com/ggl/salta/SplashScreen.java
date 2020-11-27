@@ -53,8 +53,6 @@ public class SplashScreen implements Screen {
         powerUps.add(new Texture("powerups/tenis.png"));
         powerUps.add(new Texture("powerups/voleibol.png"));
         powerUps.add(new Texture("powerups/bate.png"));
-
-
     }
 
     @Override

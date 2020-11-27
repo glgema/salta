@@ -76,4 +76,24 @@ public abstract class Database {
     public void addTrofeos(int trofeos){
         setTrofeos(trofeos + getTrofeos());
     }
+
+    public String getDesbloqueados(){
+        Result q=query("SELECT "+DESBLOQUEADO+" FROM '"+TABLA+"'");
+        q.moveToNext();
+        return q.getString(q.getColumnIndex(DESBLOQUEADO));
+    }
+
+    public boolean estaDesbloqueado(int aspecto){
+        String[] desbloqueados = getDesbloqueados().split(" ");
+
+        for(String des : desbloqueados)
+            if(Integer.parseInt(des) == aspecto)
+                return true;
+
+        return false;
+    }
+
+    public void desbloquear(int aspecto){
+        execute("UPDATE "+TABLA+ " SET "+DESBLOQUEADO+" = '"+getDesbloqueados()+" "+aspecto+"'");
+    }
 }

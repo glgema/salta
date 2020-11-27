@@ -9,11 +9,16 @@ public class Aspecto extends Sprite {
 
     public int precio;
     public boolean desbloqueado;
+    public Texture textureB;
+    public Texture textureD;
 
-    public Aspecto(int precio, boolean desbloqueado, Texture texture) {
-        super(texture);
+    public Aspecto(int precio, boolean desbloqueado, Texture textureB, Texture textureD) {
+        //super(texture);
         this.precio = precio;
         this.desbloqueado = desbloqueado;
+
+        this.textureB = textureB;
+        this.textureD = textureD;
     }
 
 

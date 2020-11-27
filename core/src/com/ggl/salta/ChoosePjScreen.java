@@ -39,7 +39,18 @@ public class ChoosePjScreen implements Screen {
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     private SpriteBatch batchHUD;
 
+    VisTextButton bAceptar;
 
+
+    public void cargarArray(){
+        aspectos = new Array<>();
+        aspectos.add(new Aspecto(0,Aplication.db.estaDesbloqueado(0), new Texture("elegirPelotas/pj1.png"), new Texture("elegirPelotas/pj1.png")));
+        aspectos.add(new Aspecto(50,Aplication.db.estaDesbloqueado(1),new Texture("elegirPelotas/pj2b.png"), new Texture("elegirPelotas/pj2.png")));
+        aspectos.add(new Aspecto(100,Aplication.db.estaDesbloqueado(2), new Texture("elegirPelotas/pj3b.png"), new Texture("elegirPelotas/pj3.png")));
+        aspectos.add(new Aspecto(150,Aplication.db.estaDesbloqueado(3), new Texture("elegirPelotas/pj4b.png"), new Texture("elegirPelotas/pj4.png")));
+        aspectos.add(new Aspecto(200,Aplication.db.estaDesbloqueado(4), new Texture("elegirPelotas/pj5b.png"), new Texture("elegirPelotas/pj5.png")));
+
+    }
     @Override
     public void show() {
 
@@ -47,17 +58,18 @@ public class ChoosePjScreen implements Screen {
             VisUI.load(VisUI.SkinScale.X2);
 
 
+        //
+        //Aplication.db.setTrofeos(220);
+
         stage = new Stage();
 
-        aspectos = new Array<>();
-        aspectos.add(new Aspecto(0,true, new Texture("elegirPelotas/pj1.png")));
-        aspectos.add(new Aspecto(50,false, new Texture("elegirPelotas/pj2.png")));
-        aspectos.add(new Aspecto(100,false, new Texture("elegirPelotas/pj3.png")));
-        aspectos.add(new Aspecto(150,false, new Texture("elegirPelotas/pj4.png")));
-        aspectos.add(new Aspecto(150,false, new Texture("elegirPelotas/pj5.png")));
-        
+        cargarArray();
+
         contador = Aplication.db.getSelection();
-        image = new VisImage(aspectos.get(contador).getTexture());
+        if(aspectos.get(contador).desbloqueado)
+            image = new VisImage(aspectos.get(contador).textureD);
+        else
+            image = new VisImage(aspectos.get(contador).textureB);
 
         textureMoneda = new Texture(Gdx.files.internal("trofeo.png"),true);
         textureMoneda.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
@@ -78,16 +90,24 @@ public class ChoosePjScreen implements Screen {
         fontPrecio = generator.generateFont(parameter);
         batchHUD = new SpriteBatch();
 
-        VisTextButton bAceptar = new VisTextButton("Aceptar");
+
+        bAceptar = new VisTextButton("");
             bAceptar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
 
-                Aplication.db.setSelection(contador);
-
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
-                dispose();
-                VisUI.dispose();
+                if(Aplication.db.estaDesbloqueado(contador)) {
+                    Aplication.db.setSelection(contador);
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+                    dispose();
+                    VisUI.dispose();
+                }else if(Aplication.db.getTrofeos() >= aspectos.get(contador).precio) {
+                    Aplication.db.desbloquear(contador);
+                    Aplication.db.setTrofeos(Aplication.db.getTrofeos() - aspectos.get(contador).precio);
+                    trofeos = Aplication.db.getTrofeos();
+                    cargarArray();
+                    image.setDrawable(aspectos.get(contador).textureD);
+                }
             }
         });
 
@@ -109,7 +129,10 @@ public class ChoosePjScreen implements Screen {
                if(contador >= aspectos.size)
                    contador = 0;
 
-               image.setDrawable(aspectos.get(contador).getTexture());
+                if(aspectos.get(contador).desbloqueado)
+                    image.setDrawable(aspectos.get(contador).textureD);
+                else
+                    image.setDrawable(aspectos.get(contador).textureB);
             }
         });
 
@@ -121,7 +144,11 @@ public class ChoosePjScreen implements Screen {
                 if(contador <= -1)
                     contador = aspectos.size-1;
 
-                image.setDrawable(aspectos.get(contador).getTexture());
+                System.out.println(contador+" "+aspectos.get(contador).desbloqueado);
+                if(aspectos.get(contador).desbloqueado)
+                    image.setDrawable(aspectos.get(contador).textureD);
+                else
+                    image.setDrawable(aspectos.get(contador).textureB);
             }
         });
 
@@ -153,15 +180,22 @@ public class ChoosePjScreen implements Screen {
         batchHUD.draw(textureMoneda, Gdx.graphics.getWidth() * 0.05f, Gdx.graphics.getHeight() - Gdx.graphics.getHeight()*0.06f, widthMoneda, widthMoneda);
         fontContMonedas.draw(batchHUD, "" + trofeos, Gdx.graphics.getWidth() * 0.07f + widthMoneda,  Gdx.graphics.getHeight() - Gdx.graphics.getHeight()*0.035f );
 
-        batchHUD.draw(textureMoneda, Gdx.graphics.getWidth()/2 - widthMoneda*2, image.getY() - Gdx.graphics.getHeight()*0.045f, widthMoneda, widthMoneda);
-        fontPrecio.draw(batchHUD, "" + aspectos.get(contador).precio , Gdx.graphics.getWidth()/2 ,  image.getY() - Gdx.graphics.getHeight()*0.025f);
-
+        if(!Aplication.db.estaDesbloqueado(contador)) {
+            batchHUD.draw(textureMoneda, Gdx.graphics.getWidth() / 2 - widthMoneda * 2, image.getY() - Gdx.graphics.getHeight() * 0.045f, widthMoneda, widthMoneda);
+            fontPrecio.draw(batchHUD, "" + aspectos.get(contador).precio, Gdx.graphics.getWidth() / 2, image.getY() - Gdx.graphics.getHeight() * 0.025f);
+        }
 
         batchHUD.end();
 
         // Pinta la UI en la pantalla
         stage.act(dt);
         stage.draw();
+
+
+        if(Aplication.db.estaDesbloqueado(contador))
+            bAceptar.setText("ACEPTAR");
+        else
+            bAceptar.setText("DESBLOQUEAR");
     }
 
     @Override
