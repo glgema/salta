@@ -1,5 +1,6 @@
 package com.ggl.salta;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
@@ -15,11 +16,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.ggl.salta.clases.Enemigo;
-import com.ggl.salta.clases.Moneda;
-import com.ggl.salta.clases.Personaje;
-import com.ggl.salta.clases.Plataforma;
+import com.ggl.salta.clases.*;
 
+import static com.ggl.salta.SplashScreen.personajes;
 import static java.lang.Math.*;
 
 public class GameScreen implements Screen {
@@ -32,13 +31,12 @@ public class GameScreen implements Screen {
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     private SpriteBatch batchHUD;
 
-    // constantes
+    // CONSTANTES
     int TILE_WIDTH = 64;
     int TILES_IN_CAMERA_WIDTH = 9;
     int TILES_IN_CAMERA_HEIGHT = 19;
     public static float PPM = 100;
 
-    Texture texturePersonaje;
     Texture texturePlataforma;
     Texture texturePlataformaRota;
     Texture textureMoneda;
@@ -47,8 +45,8 @@ public class GameScreen implements Screen {
     Array<Plataforma> plataformas;
     Array<Moneda> monedas;
     Array<Enemigo> enemigos;
-    int altura;
-    int contMonedas = 0;
+    public static int altura;
+    public static int contMonedas = 0;
 
     // FONDO
     Texture fondoTexture;
@@ -77,7 +75,7 @@ public class GameScreen implements Screen {
         batchHUD = new SpriteBatch();
 
         // fondos
-        fondoTexture = new Texture("fondo.png");
+        fondoTexture = SplashScreen.fondos.get(Aplication.db.getSelection());
         fondosArray = new Array<>();
 
         camera = new OrthographicCamera();
@@ -94,9 +92,6 @@ public class GameScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map, 1 / PPM);
         batch = renderer.getBatch();
 
-        texturePersonaje = new Texture(Gdx.files.internal("pelota.png"),true);
-        texturePersonaje.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
-
         texturePlataforma = new Texture(Gdx.files.internal("plataforma.png"),true);
         texturePlataformaRota = new Texture("plataforma2.png");
 
@@ -107,11 +102,11 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0,-10f),true);
         b2dr = new Box2DDebugRenderer();
 
-        personaje = new Personaje(texturePersonaje,new Vector2(32,32), world);
+        personaje = new Personaje(personajes.get(Aplication.db.getSelection()),new Vector2(32,32), world);
         plataformas = new Array<>();
         monedas = new Array<>();
         enemigos = new Array<>();
-        altura = 0;
+        //altura = 0;
     }
 
     float alturaUltimaPlat;
@@ -119,7 +114,6 @@ public class GameScreen implements Screen {
         if(plataformas.size < 4)
             for(int i = 0 ; i < 5 ; i++) {
                 float platX = MathUtils.random(0, camera.viewportWidth - texturePlataforma.getWidth() / PPM);
-                //float platY = alturaUltimaPlat + camera.viewportHeight/3;
                 float platY = alturaUltimaPlat + personaje.rect.getHeight()*5;
 
                 int tipoPlat;
@@ -137,7 +131,7 @@ public class GameScreen implements Screen {
                 // generar monedas
                 if(MathUtils.randomBoolean()){
                     float x = plat.getX() + plat.getWidth()/2 - textureMoneda.getWidth()/ PPM / 4;
-                    float y = plat.getY() + plat.getHeight() * 2 ;
+                    float y = plat.getY() + plat.getHeight() * 4 ;
                     monedas.add(new Moneda(new Vector2(x,y),textureMoneda ));
                 }
                 
@@ -185,7 +179,6 @@ public class GameScreen implements Screen {
     }
 
     public void generarPlataformasInicio(){
-        // todo arreglar esta puta basura
 
         for(int i = 1 ; i < 3 ; i++)
             plataformas.add(new Plataforma(new Vector2(MathUtils.random(0, camera.viewportWidth - texturePlataforma.getWidth() / PPM), (personaje.b2body.getPosition().y) + 0.9f * i), texturePlataforma , false, 0));
@@ -201,6 +194,8 @@ public class GameScreen implements Screen {
     public void show() {
         generarPlataformasInicio();
         generarFondoInicial();
+
+        personaje.b2body.setTransform(new Vector2(plataformas.get(0).getX()+plataformas.get(0).getWidth()/2 ,plataformas.get(0).getY()+plataformas.get(0).getHeight()),0);
     }
 
     @Override
@@ -225,10 +220,10 @@ public class GameScreen implements Screen {
         for (Sprite fondo : fondosArray)
             fondo.draw(batch);
 
-        personaje.draw(batch);
-
         for (Plataforma plataforma : plataformas)
             plataforma.draw(batch);
+
+        personaje.draw(batch);
 
         for (Moneda moneda : monedas)
             moneda.draw(batch);
@@ -240,10 +235,12 @@ public class GameScreen implements Screen {
 
         batchHUD.begin();
 
+        float widthMoneda = Gdx.graphics.getWidth()*0.06f;
         // HUD
         fontAltura.draw(batchHUD, altura+" m",x , y);
-        batchHUD.draw(textureMoneda, 50, Gdx.graphics.getHeight() - 200);
-        fontContMonedas.draw(batchHUD, "" + contMonedas, 150,  Gdx.graphics.getHeight() - 150);
+        batchHUD.draw(textureMoneda, Gdx.graphics.getWidth() * 0.05f, y - Gdx.graphics.getHeight()*0.06f,widthMoneda,widthMoneda );
+        fontContMonedas.draw(batchHUD, "" + contMonedas, Gdx.graphics.getWidth() * 0.07f + widthMoneda,  y - Gdx.graphics.getHeight()*0.035f );
+
 
         batchHUD.end();
     }
@@ -256,17 +253,16 @@ public class GameScreen implements Screen {
         if(personaje.b2body.getPosition().y > camera.position.y)
             camera.position.set(new Vector2(camera.position.x,personaje.b2body.getPosition().y ),0);
 
-        ///caida
-        /*
-        if(personaje.b2body.getPosition().y < camera.position.y - camera.viewportHeight/2)
-            camera.position.y -= 5/PPM;
-*/
         camera.update();
         renderer.setView(camera);
 
-        altura = Math.round(camera.position.y * 10);
-    }
 
+        if(Math.round(camera.position.y * 10) > aux)
+            altura++;
+
+        aux = Math.round(camera.position.y * 10);
+    }
+    int aux = 0;
 
     public Vector3 getTouchPosInGameWorld() {
         return camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -280,6 +276,13 @@ public class GameScreen implements Screen {
         personaje.setPosition(personaje.b2body.getPosition().x - personaje.getWidth()/2, personaje.b2body.getPosition().y - personaje.getHeight()/2);
         personaje.rect.setPosition(personaje.getX(),personaje.getY());
 
+
+        // BONUS
+        if(altura == 100){
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new BonusScreen());
+            dispose();
+        }
+
         //TIRAR ENEMIGO
         if(Gdx.input.isTouched()) {
             Vector2 touch = new Vector2(getTouchPosInGameWorld().x, getTouchPosInGameWorld().y);
@@ -289,32 +292,41 @@ public class GameScreen implements Screen {
         }
 
         // SUELO
-        if(personaje.b2body.getPosition().y <= (camera.position.y - camera.viewportHeight/2))
-            personaje.saltar();
+        if((personaje.b2body.getPosition().y <= (camera.position.y - camera.viewportHeight/2)) )
+            if((camera.position.y - camera.viewportHeight/2) > 0) {
+                Aplication.db.addTrofeos(contMonedas);
+                if(Aplication.db.getAltura() < altura)
+                    Aplication.db.setAltura(altura);
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver());
+            }
+            else
+                personaje.saltar();
 
-        // gravedad segun giro
+        // Gravedad segun giro
         int vg=round( Gdx.input.getAccelerometerX());
         System.out.println(" Inclinacion Vertical: "+vg);
         personaje.b2body.setLinearVelocity(new Vector2(-vg,personaje.b2body.getLinearVelocity().y));
 
-        // tp margenes
+        // TP margenes
         if(personaje.b2body.getPosition().x <= camera.position.x - camera.viewportWidth/2)
             personaje.b2body.setTransform((camera.position.x - camera.viewportWidth/2) + camera.viewportWidth ,personaje.b2body.getPosition().y,0);
         else if(personaje.b2body.getPosition().x >= camera.position.x + camera.viewportWidth/2)
             personaje.b2body.setTransform(camera.position.x - camera.viewportWidth/2,personaje.b2body.getPosition().y,0);
 
-        // remove
+        // Remove
         for (Plataforma plataforma : plataformas) {
-            if (plataforma.rect.contains(new Vector2(personaje.b2body.getPosition().x, personaje.b2body.getPosition().y - 35 / PPM)) && personaje.b2body.getLinearVelocity().y <= 0){
-                personaje.saltar();
-                if(plataforma.rectPowerups!= null ) {
-                    if (personaje.rect.overlaps(plataforma.rectPowerups)) {
-                        personaje.cogerPorwerups(plataforma.tipo);
+            if(personaje.b2body.getLinearVelocity().y <= 0)
+                if (plataforma.rect.contains(new Vector2(personaje.b2body.getPosition().x - personaje.getWidth() / 2, personaje.b2body.getPosition().y - 35 / PPM)) ||
+                        (plataforma.rect.contains(new Vector2(personaje.b2body.getPosition().x + personaje.getWidth() / 2, personaje.b2body.getPosition().y - 35 / PPM)))){
+                    personaje.saltar();
+                    if(plataforma.rectPowerups!= null ) {
+                        if (personaje.rect.overlaps(plataforma.rectPowerups)) {
+                            personaje.cogerPorwerups(plataforma.tipo);
+                        }
                     }
+                    if (plataforma.seBorra())
+                    plataformas.removeValue(plataforma, false);
                 }
-                if (plataforma.seBorra())
-                plataformas.removeValue(plataforma, false);
-            }
             if(plataforma.getY() <= (camera.position.y - camera.viewportHeight/2))
                 plataformas.removeValue(plataforma,false);
         }
@@ -370,7 +382,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
-        texturePersonaje.dispose();
     }
 }
 

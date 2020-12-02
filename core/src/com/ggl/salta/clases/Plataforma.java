@@ -7,15 +7,16 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.ggl.salta.Aplication;
 
 import static com.ggl.salta.GameScreen.PPM;
+import static com.ggl.salta.SplashScreen.powerUps;
 
 public class Plataforma extends Sprite{
 
     public Rectangle rect;
     boolean seBorra;
     public Rectangle rectPowerups;
-    Texture textMuelle = new Texture(Gdx.files.internal("botas.png"),true);
     Vector2 posPowerups;
     public int tipo;
     Sprite muelle;
@@ -44,6 +45,7 @@ public class Plataforma extends Sprite{
     public void ponerPowerUps(int tipo){
         posPowerups = new Vector2(rect.x + rect.getWidth()/2 , rect.y + rect.getHeight());
 
+        Texture textMuelle = powerUps.get(Aplication.db.getSelection());
         if(tipo==1) {
             muelle = new Sprite(textMuelle);
             rectPowerups = new Rectangle(posPowerups.x , posPowerups.y, textMuelle.getWidth() / PPM / 2, textMuelle.getHeight() / PPM / 2);

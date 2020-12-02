@@ -12,6 +12,8 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
-		initialize(new Aplication(), config);
+		//initialize(new Aplication(), config);
+		initialize(new Aplication(new DatabaseAndroid(this.getBaseContext())),config);
+
 	}
 }
