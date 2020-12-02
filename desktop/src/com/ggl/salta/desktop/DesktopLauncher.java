@@ -10,10 +10,6 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.height = 1280;
 		config.width = 720;
-<<<<<<< HEAD
 		new LwjglApplication(new Aplication(new DatabaseDesktop()),config);
-=======
-		//new LwjglApplication(new Aplication(new DatabaseDesktop()), "Example", 6, 6,config);
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 	}
 }

@@ -3,7 +3,6 @@ package com.ggl.salta;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-<<<<<<< HEAD
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -14,29 +13,20 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-=======
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.ggl.salta.clases.Database;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
-<<<<<<< HEAD
 import static com.ggl.salta.GameScreen.altura;
 import static com.ggl.salta.GameScreen.contMonedas;
 
-=======
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 public class GameOver implements Screen {
 
 
     private Stage stage;
     Aplication game;
-<<<<<<< HEAD
 
     SpriteBatch batch = new SpriteBatch();
 
@@ -60,18 +50,12 @@ public class GameOver implements Screen {
         alt = altura;
         altura = 0;
 
-=======
-    @Override
-    public void show() {
-
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         if (!VisUI.isLoaded())
             VisUI.load();
 
         stage = new Stage();
 
         VisTable table = new VisTable(false);
-<<<<<<< HEAD
         //table.setFillParent(true);
         stage.addActor(table);
 
@@ -92,12 +76,6 @@ public class GameOver implements Screen {
 
 
         TextButton playButton = new TextButton("Volver a\n jugar", textButtonStyle);
-=======
-        table.setFillParent(true);
-        stage.addActor(table);
-
-        VisTextButton playButton = new VisTextButton("Volver a jugar");
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -106,11 +84,7 @@ public class GameOver implements Screen {
             }
         });
 
-<<<<<<< HEAD
         TextButton quitButton = new TextButton("Inicio", textButtonStyle);
-=======
-        VisTextButton quitButton = new VisTextButton("Inicio");
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -122,25 +96,17 @@ public class GameOver implements Screen {
         });
 
         // Añade filas a la tabla y añade los componentes
-<<<<<<< HEAD
         table.setPosition(Gdx.graphics.getWidth() /2, Gdx.graphics.getHeight() * 0.3f);
         table.row();
         table.add(playButton).bottom().width(700).height(300).pad(30);
         table.row();
         table.add(quitButton).bottom().width(700).height(150).pad(30);
-=======
-        table.row();
-        table.add(playButton).center().width(600).height(200).pad(5);
-        table.row();
-        table.add(quitButton).center().width(600).height(150).pad(5);
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float dt) {
-<<<<<<< HEAD
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -153,11 +119,6 @@ public class GameOver implements Screen {
         font1.draw(batch, "Altura maxima: " + altMaxima , Gdx.graphics.getWidth() * 0.15f, Gdx.graphics.getHeight() * 0.65f);
 
         batch.end();
-=======
-        Gdx.gl.glClearColor(0, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         // Pinta la UI en la pantalla
         stage.act(dt);
         stage.draw();

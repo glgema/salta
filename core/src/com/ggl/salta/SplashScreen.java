@@ -2,10 +2,7 @@ package com.ggl.salta;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-<<<<<<< HEAD
 import com.badlogic.gdx.audio.Sound;
-=======
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -29,11 +26,8 @@ public class SplashScreen implements Screen {
     public static Array<Texture> personajes = new Array<>();
     public static Array<Texture> powerUps = new Array<>();
 
-<<<<<<< HEAD
     public static Sound botar;
 
-=======
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
     public SplashScreen(Aplication game) {
         this.game = game;
 
@@ -42,10 +36,7 @@ public class SplashScreen implements Screen {
         stage = new Stage();
 
         cargarArrays();
-<<<<<<< HEAD
         botar = Gdx.audio.newSound(Gdx.files.internal("sonidos/botar.mp3"));
-=======
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
     }
 
     public void cargarArrays(){
@@ -85,7 +76,6 @@ public class SplashScreen implements Screen {
                 })
         ));
 
-<<<<<<< HEAD
 
         float width = Gdx.graphics.getWidth()*0.8f;
         float height = width * splashImage.getHeight() / splashImage.getWidth();
@@ -93,9 +83,6 @@ public class SplashScreen implements Screen {
 
 
         table.row().width(width).height(height);
-=======
-        table.row().height(splashTexture.getHeight()*0.8f).width(splashTexture.getWidth()*0.8f);
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         table.add(splashImage).center();
         stage.addActor(table);
     }

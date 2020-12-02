@@ -11,29 +11,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-<<<<<<< HEAD
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.ggl.salta.clases.Aspecto;
-=======
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
-import com.ggl.salta.clases.Aspecto;
-import com.ggl.salta.clases.Database;
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
-<<<<<<< HEAD
 import static com.ggl.salta.MainScreen.font;
 import static com.ggl.salta.MainScreen.font2;
 
-=======
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 public class ChoosePjScreen implements Screen {
 
     Stage stage;
@@ -53,16 +43,11 @@ public class ChoosePjScreen implements Screen {
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     private SpriteBatch batchHUD;
 
-<<<<<<< HEAD
     TextButton.TextButtonStyle textButtonStyle;
 
     TextButton bAceptar;
 
     int size;
-=======
-    VisTextButton bAceptar;
-
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
     public void cargarArray(){
         aspectos = new Array<>();
@@ -76,21 +61,11 @@ public class ChoosePjScreen implements Screen {
     @Override
     public void show() {
 
-<<<<<<< HEAD
         Aplication.db.setTrofeos(200);
 
         if (!VisUI.isLoaded())
             VisUI.load(VisUI.SkinScale.X2);
 
-=======
-        if (!VisUI.isLoaded())
-            VisUI.load(VisUI.SkinScale.X2);
-
-
-        //
-        //Aplication.db.setTrofeos(220);
-
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         stage = new Stage();
 
         cargarArray();
@@ -104,22 +79,13 @@ public class ChoosePjScreen implements Screen {
         textureMoneda = new Texture(Gdx.files.internal("trofeo.png"),true);
         textureMoneda.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         VisTable table = new VisTable(false);
         table.setFillParent(true);
         stage.addActor(table);
 
         //VisLabel lPuntos = new VisLabel("Puntos");
-<<<<<<< HEAD
         int border = (int)(Gdx.graphics.getHeight() * 0.003f);
         int size = (int)(Gdx.graphics.getHeight() * 0.025f);
-=======
-        int size = (int)(Gdx.graphics.getHeight() * 0.025f);
-        int border = (int)(Gdx.graphics.getHeight() * 0.003f);
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
         parameter.size = size;
         parameter.color = Color.WHITE;
@@ -128,7 +94,6 @@ public class ChoosePjScreen implements Screen {
         fontPrecio = generator.generateFont(parameter);
         batchHUD = new SpriteBatch();
 
-<<<<<<< HEAD
         Skin skin = new Skin(Gdx.files.internal("skins/flatearthui/flat-earth-ui.json"));
 
 
@@ -137,10 +102,6 @@ public class ChoosePjScreen implements Screen {
 
 
         bAceptar = new TextButton("", textButtonStyle);
-=======
-
-        bAceptar = new VisTextButton("");
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
             bAceptar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -160,11 +121,7 @@ public class ChoosePjScreen implements Screen {
             }
         });
 
-<<<<<<< HEAD
         TextButton bAtras = new TextButton("Atras",textButtonStyle);
-=======
-        VisTextButton bAtras = new VisTextButton("Atras");
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         bAtras.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -174,11 +131,7 @@ public class ChoosePjScreen implements Screen {
             }
         });
 
-<<<<<<< HEAD
         TextButton bDerecha = new TextButton(">",textButtonStyle);
-=======
-        VisTextButton bDerecha = new VisTextButton(">");
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         bDerecha.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -193,11 +146,7 @@ public class ChoosePjScreen implements Screen {
             }
         });
 
-<<<<<<< HEAD
         TextButton bIzquierda = new TextButton("<",textButtonStyle);
-=======
-        VisTextButton bIzquierda = new VisTextButton("<");
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         bIzquierda.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -231,11 +180,7 @@ public class ChoosePjScreen implements Screen {
 
     @Override
     public void render(float dt) {
-<<<<<<< HEAD
         Gdx.gl.glClearColor(1, 1, 1, 1);
-=======
-        Gdx.gl.glClearColor(0, 1, 1, 1);
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batchHUD.begin();
@@ -257,7 +202,6 @@ public class ChoosePjScreen implements Screen {
         stage.draw();
 
 
-<<<<<<< HEAD
         if(Aplication.db.estaDesbloqueado(contador)) {
             bAceptar.setText("ACEPTAR");
             textButtonStyle.font = font;
@@ -267,12 +211,6 @@ public class ChoosePjScreen implements Screen {
             textButtonStyle.font = font2;
             bAceptar.setStyle(textButtonStyle);
         }
-=======
-        if(Aplication.db.estaDesbloqueado(contador))
-            bAceptar.setText("ACEPTAR");
-        else
-            bAceptar.setText("DESBLOQUEAR");
->>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
     }
 
     @Override
