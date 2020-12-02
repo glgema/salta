@@ -20,4 +20,9 @@ public class Aspecto extends Sprite {
         this.textureB = textureB;
         this.textureD = textureD;
     }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 }

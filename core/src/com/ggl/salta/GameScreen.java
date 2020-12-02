@@ -23,6 +23,8 @@ import static java.lang.Math.*;
 
 public class GameScreen implements Screen {
 
+
+
     // HUD
     private BitmapFont fontAltura;
     private BitmapFont fontContMonedas;
@@ -295,12 +297,19 @@ public class GameScreen implements Screen {
         if((personaje.b2body.getPosition().y <= (camera.position.y - camera.viewportHeight/2)) )
             if((camera.position.y - camera.viewportHeight/2) > 0) {
                 Aplication.db.addTrofeos(contMonedas);
+<<<<<<< HEAD
                 if(Aplication.db.getAltura() < altura)
                     Aplication.db.setAltura(altura);
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver());
             }
             else
                 personaje.saltar();
+<<<<<<< HEAD
+=======
+
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
         // Gravedad segun giro
         int vg=round( Gdx.input.getAccelerometerX());

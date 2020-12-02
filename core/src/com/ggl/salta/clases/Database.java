@@ -24,7 +24,10 @@ public abstract class Database {
     public abstract Result query(String sql);
 
     public void onCreate(){
+<<<<<<< HEAD
 
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         //Example of Highscore table code (You should change this for your own DB code creation)
         execute("CREATE TABLE IF NOT EXISTS '"+TABLA+"' ('"+ID+"' INTEGER PRIMARY KEY  NOT NULL , '"+SELECCIONADO+"' INTEGER NOT NULL , '"+TROFEOS+"' INTEGER NOT NULL,'"+ALTURA+"' INTEGER NOT NULL,'"+DESBLOQUEADO+"' VARCHAR NOT NULL );");
 
@@ -97,6 +100,7 @@ public abstract class Database {
     public void desbloquear(int aspecto){
         execute("UPDATE "+TABLA+ " SET "+DESBLOQUEADO+" = '"+getDesbloqueados()+" "+aspecto+"'");
     }
+<<<<<<< HEAD
 
     public int getAltura(){
         Result q=query("SELECT "+ALTURA+" FROM '"+TABLA+"'");
@@ -107,4 +111,6 @@ public abstract class Database {
     public void setAltura(int altura){
         execute("UPDATE "+TABLA+ " SET "+ALTURA+" = "+altura);
     }
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 }

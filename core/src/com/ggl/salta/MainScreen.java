@@ -3,6 +3,7 @@ package com.ggl.salta;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+<<<<<<< HEAD
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,6 +12,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+=======
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,20 +27,46 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+<<<<<<< HEAD
+=======
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+<<<<<<< HEAD
 import static java.lang.Math.floor;
+=======
+import java.util.Random;
+
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 import static java.lang.Math.round;
 
 public class MainScreen implements Screen {
     private Stage stage;
     private Aplication game;
 
+<<<<<<< HEAD
     public static float PPM = 100;
 
     Array<Texture> pelotas = new Array<>();
+=======
+
+    // constantes
+    int TILE_WIDTH = 64;
+    int TILES_IN_CAMERA_WIDTH = 9;
+    int TILES_IN_CAMERA_HEIGHT = 19;
+    public static float PPM = 100;
+
+    static final float STEP_TIME = 1f / 60f;
+
+    static final int VELOCITY_ITERATIONS = 6;
+
+    static final int POSITION_ITERATIONS = 2;
+
+    Array<Texture> personajes = new Array<>();
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
     SpriteBatch batch;
 
@@ -42,11 +76,17 @@ public class MainScreen implements Screen {
 
     Box2DDebugRenderer debugRenderer;
 
+<<<<<<< HEAD
+=======
+    float accumulator = 0;
+
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
     Body ground;
     Body paredIzq;
     Body paredDer;
     Body techo;
 
+<<<<<<< HEAD
     Array<Body> pelotasBodies = new Array<>();
 
     Array<Sprite> pelotasSprites = new Array<>();
@@ -60,6 +100,11 @@ public class MainScreen implements Screen {
 
     private FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/LemonMilk.otf"));
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+=======
+    Array<Body> fruitBodies = new Array<>();
+
+    Array<Sprite> fruitSprites = new Array<>();
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
 
     public MainScreen(Aplication game) {
@@ -67,6 +112,7 @@ public class MainScreen implements Screen {
     }
 
 
+<<<<<<< HEAD
     private void generatePelotas() {
         for (int i = 0; i < pelotas.size; i++) {
 
@@ -83,6 +129,20 @@ public class MainScreen implements Screen {
     }
 
     private Body createBody( float rotation, int i) {
+=======
+    private void generateFruit() {
+        for (int i = 0; i < personajes.size; i++) {
+
+            Sprite sprite = new Sprite(personajes.get(i));
+            sprite.setSize(sprite.getWidth() / PPM , sprite.getHeight() /PPM);
+            fruitSprites.add(sprite);
+
+            fruitBodies.add(createBody( 0));
+        }
+    }
+
+    private Body createBody( float rotation) {
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         BodyDef bdef = new BodyDef();
         bdef.position.set(0 / PPM, 0 / PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
@@ -90,6 +150,7 @@ public class MainScreen implements Screen {
 
         FixtureDef fdef = new FixtureDef();
         fdef.restitution = 1;
+<<<<<<< HEAD
         fdef.density = 0.1f;
 
         CircleShape shape = new CircleShape();
@@ -105,6 +166,14 @@ public class MainScreen implements Screen {
         body.setActive(true);
 
 
+=======
+
+        CircleShape shape = new CircleShape();
+        shape.setRadius((personajes.get(0).getWidth()/2) / PPM);
+
+        fdef.shape = shape;
+
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         body.createFixture(fdef).setUserData(this);
 
         body.setTransform(50/PPM,50 /PPM, rotation);
@@ -119,6 +188,7 @@ public class MainScreen implements Screen {
 
         camera = new OrthographicCamera();
 
+<<<<<<< HEAD
         camera.setToOrtho(false, Gdx.graphics.getWidth() / PPM, Gdx.graphics.getHeight() / PPM );
         camera.update();
 
@@ -127,11 +197,23 @@ public class MainScreen implements Screen {
         pelotas.add( new Texture("pelotas/pj3.png"));
         pelotas.add( new Texture("pelotas/pj4.png"));
         pelotas.add( new Texture("pelotas/pj5.png"));
+=======
+        camera.setToOrtho(false, (TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM, ((TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM)  * (Gdx.graphics.getHeight()/Gdx.graphics.getWidth()) );
+        camera.update();
+
+
+        personajes.add( new Texture("pelotas/pj1.png"));
+        personajes.add( new Texture("pelotas/pj2.png"));
+        personajes.add( new Texture("pelotas/pj3.png"));
+        personajes.add( new Texture("pelotas/pj4.png"));
+        personajes.add( new Texture("pelotas/pj5.png"));
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
         world = new World(new Vector2(0, -10), true);
 
         debugRenderer = new Box2DDebugRenderer();
 
+<<<<<<< HEAD
         generatePelotas();
 
 
@@ -155,6 +237,11 @@ public class MainScreen implements Screen {
         float btWidth = Gdx.graphics.getWidth()*0.7f;
         float btHeight = Gdx.graphics.getHeight()*0.10f;
         float btPad = Gdx.graphics.getWidth()*0.02f;
+=======
+        generateFruit();
+
+        Skin skin = new Skin(Gdx.files.internal("skins/neonui/neon-ui.json"));
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
         if (!VisUI.isLoaded())
             VisUI.load(VisUI.SkinScale.X2);
@@ -213,10 +300,17 @@ public class MainScreen implements Screen {
         batch.begin();
 
         // iterate through each of the fruits
+<<<<<<< HEAD
         for (int i = 0; i < pelotasBodies.size; i++) {
 
             // get the physics body of the fruit
             Body body = pelotasBodies.get(i);
+=======
+        for (int i = 0; i < fruitBodies.size; i++) {
+
+            // get the physics body of the fruit
+            Body body = fruitBodies.get(i);
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
             // get the position of the fruit from Box2D
             Vector2 position = body.getPosition();
@@ -225,9 +319,16 @@ public class MainScreen implements Screen {
             float degrees = (float) Math.toDegrees(body.getAngle());
 
             // draw the fruit on the screen
+<<<<<<< HEAD
             drawSprite(pelotasSprites.get(i), position.x - pelotasSprites.get(i).getWidth()/2, position.y - pelotasSprites.get(i).getWidth()/2, degrees);
         }
 
+=======
+            drawSprite(fruitSprites.get(i), position.x - fruitSprites.get(i).getWidth()/2, position.y - fruitSprites.get(i).getWidth()/2, degrees);
+        }
+
+        // close the buffer - this is what actually draws the sprites
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         batch.end();
 
 
@@ -246,8 +347,11 @@ public class MainScreen implements Screen {
     private void drawSprite(Sprite sprite, float x, float y, float degrees) {
         sprite.setPosition(x, y);
 
+<<<<<<< HEAD
         sprite.setOrigin( sprite.getWidth()/2,  sprite.getHeight()/2);
 
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         sprite.setRotation(degrees);
 
         sprite.draw(batch);
@@ -282,14 +386,22 @@ public class MainScreen implements Screen {
         ground = world.createBody(bodyDef);
         ground.createFixture(fixtureDef);
 
+<<<<<<< HEAD
         ground.setTransform(0 / PPM, -1 / PPM, 0);
+=======
+        ground.setTransform(10 / PPM, 10 / PPM, 0);
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
         // techo
 
         techo = world.createBody(bodyDef);
         techo.createFixture(fixtureDef);
 
+<<<<<<< HEAD
         techo.setTransform( 0 / PPM, camera.viewportHeight +1/PPM, 0);
+=======
+        techo.setTransform( 10 / PPM, camera.viewportHeight -1 / PPM, 0);
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
         // pared izq
 
@@ -299,7 +411,11 @@ public class MainScreen implements Screen {
         paredIzq = world.createBody(bodyDef);
         paredIzq.createFixture(fixtureDef);
 
+<<<<<<< HEAD
         paredIzq.setTransform(-1 / PPM, 0 / PPM, 0);
+=======
+        paredIzq.setTransform(10 / PPM, 10 / PPM, 0);
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
         // pared der
 
@@ -307,7 +423,11 @@ public class MainScreen implements Screen {
         paredDer = world.createBody(bodyDef);
         paredDer.createFixture(fixtureDef);
 
+<<<<<<< HEAD
         paredDer.setTransform(camera.viewportWidth , 0 / PPM, 0);
+=======
+        paredDer.setTransform(camera.viewportWidth - 1 / PPM, 10 / PPM, 0);
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
 
         shape.dispose();
     }

@@ -11,7 +11,10 @@ public class DatabaseDesktop extends Database{
     protected boolean nodatabase=false;
 
     public DatabaseDesktop() {
+<<<<<<< HEAD
         /*
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         loadDatabase();
         if (isNewDatabase()){
             onCreate();
@@ -20,18 +23,28 @@ public class DatabaseDesktop extends Database{
             onUpgrade();
             upgradeVersion();
         }
+<<<<<<< HEAD
 */
     }
 
     public void execute(String sql){
         /*
+=======
+
+    }
+
+    public void execute(String sql){
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         try {
             stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+<<<<<<< HEAD
 
          */
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
     }
 
     public int executeUpdate(String sql){
@@ -44,19 +57,28 @@ public class DatabaseDesktop extends Database{
     }
 
     public Result query(String sql) {
+<<<<<<< HEAD
         /*
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         try {
             return new ResultDesktop(stmt.executeQuery(sql));
         } catch (SQLException e) {
             e.printStackTrace();
         }
+<<<<<<< HEAD
 
          */
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         return null;
     }
 
     private void loadDatabase(){
+<<<<<<< HEAD
         /*
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         File file = new File (database_name+".db");
         if(!file.exists())
             nodatabase=true;
@@ -69,8 +91,11 @@ public class DatabaseDesktop extends Database{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+<<<<<<< HEAD
 
          */
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
     }
 
     private void upgradeVersion() {
@@ -82,15 +107,21 @@ public class DatabaseDesktop extends Database{
     }
 
     private boolean isVersionDifferent(){
+<<<<<<< HEAD
         /*
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
         Result q=query("PRAGMA user_version");
         if (!q.isEmpty())
             return (q.getInt(1)!=version);
         else
             return true;
+<<<<<<< HEAD
 
          */
         return true;
+=======
+>>>>>>> ab324cf272ec849cf5d21e55b0e9b85b79f5e20c
     }
 
     public class ResultDesktop implements Result{
