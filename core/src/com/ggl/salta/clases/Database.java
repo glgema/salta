@@ -1,6 +1,5 @@
 package com.ggl.salta.clases;
 
-//General class that needs to be implemented on Android and Desktop Applications
 public abstract class Database {
 
     public static final String BASE_DATOS = "guardado.db";
@@ -14,38 +13,37 @@ public abstract class Database {
     protected static Database instance = null;
     protected static int version=1;
 
-    //Runs a sql query like "create".
     public abstract void execute(String sql);
 
-    //Identical to execute but returns the number of rows affected (useful for updates)
     public abstract int executeUpdate(String sql);
 
-    //Runs a query and returns an Object with all the results of the query. [Result Interface is defined below]
     public abstract Result query(String sql);
 
     public void onCreate(){
 
-        //Example of Highscore table code (You should change this for your own DB code creation)
-        execute("CREATE TABLE IF NOT EXISTS '"+TABLA+"' ('"+ID+"' INTEGER PRIMARY KEY  NOT NULL , '"+SELECCIONADO+"' INTEGER NOT NULL , '"+TROFEOS+"' INTEGER NOT NULL,'"+ALTURA+"' INTEGER NOT NULL,'"+DESBLOQUEADO+"' VARCHAR NOT NULL );");
+        //CREO LA TABLA
+        execute("CREATE TABLE IF NOT EXISTS '"+TABLA+"' ('"+ID+"' INTEGER PRIMARY KEY  NOT NULL , " +
+                "'"+SELECCIONADO+"' INTEGER NOT NULL , '"+TROFEOS+"' INTEGER NOT NULL,'"+ALTURA+"' INTEGER NOT NULL," +
+                "'"+DESBLOQUEADO+"' VARCHAR NOT NULL );");
 
         Result q=query("SELECT * FROM '"+TABLA+"'");
 
+        //INSERTO LOS VALORES POR DEFECTO
         if(q.isEmpty())
-            execute("INSERT INTO '"+TABLA+"'("+ID+","+SELECCIONADO+","+TROFEOS+","+ALTURA+","+DESBLOQUEADO+") values (1,0,0,0,'0')");
+            execute("INSERT INTO '"+TABLA+"'("+ID+","+SELECCIONADO+","+TROFEOS+","+ALTURA+","+DESBLOQUEADO+")" +
+                    " values (1,0,0,0,'0')");
         else {
             q.moveToNext();
-            System.out.println("TABLA of "+q.getInt(q.getColumnIndex(ID))+": "+q.getInt(q.getColumnIndex(SELECCIONADO))+": "+q.getInt(q.getColumnIndex(TROFEOS))+": "+q.getInt(q.getColumnIndex(ALTURA))+": "+q.getString(q.getColumnIndex(DESBLOQUEADO)));
+
         }
     }
 
     public void onUpgrade(){
-        //Example code (You should change this for your own DB code)
         execute("DROP TABLE IF EXISTS 'highscores';");
         onCreate();
         System.out.println("DB Upgrade maded because I changed DataBase.version on code");
     }
 
-    //Interface to be implemented on both Android and Desktop Applications
     public interface Result{
         public boolean isEmpty();
         public boolean moveToNext();

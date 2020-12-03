@@ -66,6 +66,7 @@ public class GameScreen implements Screen {
     int size = (int)(Gdx.graphics.getHeight() * 0.025f);
     int border = (int)(Gdx.graphics.getHeight() * 0.003f);
     public GameScreen(){
+
         // HUD
         parameter.size = this.size;
         parameter.color = Color.WHITE;
@@ -74,7 +75,7 @@ public class GameScreen implements Screen {
         fontContMonedas = generator.generateFont(parameter);
         batchHUD = new SpriteBatch();
 
-        // fondos
+        // Fondos
         fondoTexture = SplashScreen.fondos.get(Aplication.db.getSelection());
         fondosArray = new Array<>();
 
@@ -83,7 +84,6 @@ public class GameScreen implements Screen {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
-        //camera.setToOrtho(false, (TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM, (TILES_IN_CAMERA_HEIGHT * TILE_WIDTH) / PPM );
         camera.setToOrtho(false, (TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM, ((TILES_IN_CAMERA_WIDTH * TILE_WIDTH) / PPM)  * (Gdx.graphics.getHeight()/Gdx.graphics.getWidth()) );
 
         camera.update();
@@ -106,7 +106,6 @@ public class GameScreen implements Screen {
         plataformas = new Array<>();
         monedas = new Array<>();
         enemigos = new Array<>();
-        //altura = 0;
     }
 
     float alturaUltimaPlat;
@@ -128,7 +127,7 @@ public class GameScreen implements Screen {
 
                 alturaUltimaPlat = platY;
 
-                // generar monedas
+                // Generar trofeos
                 if(MathUtils.randomBoolean()){
                     float x = plat.getX() + plat.getWidth()/2 - textureMoneda.getWidth()/ PPM / 4;
                     float y = plat.getY() + plat.getHeight() * 4 ;
@@ -241,7 +240,6 @@ public class GameScreen implements Screen {
         batchHUD.draw(textureMoneda, Gdx.graphics.getWidth() * 0.05f, y - Gdx.graphics.getHeight()*0.06f,widthMoneda,widthMoneda );
         fontContMonedas.draw(batchHUD, "" + contMonedas, Gdx.graphics.getWidth() * 0.07f + widthMoneda,  y - Gdx.graphics.getHeight()*0.035f );
 
-
         batchHUD.end();
     }
     float x = Gdx.graphics.getWidth() * 0.05f;
@@ -249,13 +247,11 @@ public class GameScreen implements Screen {
 
     private void handleCamera() {
 
-        //
         if(personaje.b2body.getPosition().y > camera.position.y)
             camera.position.set(new Vector2(camera.position.x,personaje.b2body.getPosition().y ),0);
 
         camera.update();
         renderer.setView(camera);
-
 
         if(Math.round(camera.position.y * 10) > aux)
             altura++;
@@ -304,7 +300,6 @@ public class GameScreen implements Screen {
 
         // Gravedad segun giro
         int vg=round( Gdx.input.getAccelerometerX());
-        System.out.println(" Inclinacion Vertical: "+vg);
         personaje.b2body.setLinearVelocity(new Vector2(-vg,personaje.b2body.getLinearVelocity().y));
 
         // TP margenes
@@ -358,7 +353,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height){
-        //camera.viewportWidth = width/ (bestI*bestJ);
         camera.viewportHeight = camera.viewportWidth * height/width;
         camera.position.set(new Vector2(camera.viewportWidth/2f , camera.viewportHeight/2f),0);
         camera.update();

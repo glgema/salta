@@ -31,6 +31,8 @@ public class PreferencesScreen implements Screen {
     CheckBox musica;
     Slider volumen;
 
+    TextButton.TextButtonStyle textButtonStyle;
+
     private OrthographicCamera camera;
     ExtendViewport viewport;
 
@@ -53,6 +55,9 @@ public class PreferencesScreen implements Screen {
 
     @Override
     public void show() {
+
+        if (!VisUI.isLoaded())
+            VisUI.load(VisUI.SkinScale.X2);
 
         layout = new GlyphLayout();
 
@@ -81,6 +86,9 @@ public class PreferencesScreen implements Screen {
         font = generator.generateFont(parameter);
         Skin skin = new Skin(Gdx.files.internal("skins/flatearthui/flat-earth-ui.json"));
         CheckBox.CheckBoxStyle checkBoxStyle = skin.get("default", CheckBox.CheckBoxStyle.class);
+
+        textButtonStyle = skin.get("default", TextButton.TextButtonStyle.class);
+        textButtonStyle.font = font;
         checkBoxStyle.font = font;
 
         parameter.color = new Color(0.886f,0.760f,0.274f ,1);
@@ -112,7 +120,7 @@ public class PreferencesScreen implements Screen {
             }
         });
 
-        TextButton volver = new TextButton("Volver", skin);
+        TextButton volver = new TextButton("Volver",textButtonStyle);
         volver.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -123,11 +131,11 @@ public class PreferencesScreen implements Screen {
         });
 
         table.row();
-        table.add(musica).bottom().width(700).height(50).pad(50);
+        table.add(musica).bottom().width(700).height(50).pad(40);
         table.row();
-        table.add(sonido).bottom().width(700).height(50).pad(50);
+        table.add(sonido).bottom().width(700).height(50).pad(20);
         table.row();
-        table.add(volumen).bottom().width(200).height(50);
+        table.add(volumen).bottom().width(200).height(230);
         table.row();
         table.add(volver).bottom().width(200).height(50);
 
@@ -139,7 +147,7 @@ public class PreferencesScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        camera.zoom = 7;
+        camera.zoom = 10;
         camera.update();
 
         batch.begin();
@@ -149,7 +157,6 @@ public class PreferencesScreen implements Screen {
 
         batch.end();
 
-        // Pinta la UI en la pantalla
         stage.act(dt);
         stage.draw();
     }

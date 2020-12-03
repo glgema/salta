@@ -19,7 +19,6 @@ import com.ggl.salta.clases.Aspecto;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import static com.ggl.salta.MainScreen.font;
 import static com.ggl.salta.MainScreen.font2;
@@ -47,6 +46,7 @@ public class ChoosePjScreen implements Screen {
 
     TextButton bAceptar;
 
+
     int size;
 
     public void cargarArray(){
@@ -60,8 +60,6 @@ public class ChoosePjScreen implements Screen {
     }
     @Override
     public void show() {
-
-        Aplication.db.setTrofeos(200);
 
         if (!VisUI.isLoaded())
             VisUI.load(VisUI.SkinScale.X2);
@@ -83,7 +81,6 @@ public class ChoosePjScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
 
-        //VisLabel lPuntos = new VisLabel("Puntos");
         int border = (int)(Gdx.graphics.getHeight() * 0.003f);
         int size = (int)(Gdx.graphics.getHeight() * 0.025f);
 
@@ -197,7 +194,6 @@ public class ChoosePjScreen implements Screen {
 
         batchHUD.end();
 
-        // Pinta la UI en la pantalla
         stage.act(dt);
         stage.draw();
 
@@ -215,7 +211,6 @@ public class ChoosePjScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // Redimensiona la escena al redimensionar la ventana del juego
         stage.getViewport().update(width, height);
     }
 
@@ -236,7 +231,6 @@ public class ChoosePjScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Libera los recursos de la escena
         stage.dispose();
     }
 }

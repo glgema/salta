@@ -20,7 +20,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 
+import static com.ggl.salta.GameScreen.contMonedas;
+
 public class BonusScreen implements Screen {
+
+    SpriteBatch batchHUD;
+    private BitmapFont fontContMonedas;
+    Texture textureMoneda;
 
     private Aplication game;
 
@@ -47,10 +53,8 @@ public class BonusScreen implements Screen {
 
     TextButton.TextButtonStyle textButtonStyle;
 
-
-    // font
+    // Font
     public static BitmapFont font;
-    public static BitmapFont font2;
 
     private FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/LemonMilk.otf"));
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -108,6 +112,7 @@ public class BonusScreen implements Screen {
         Box2D.init();
 
         batch = new SpriteBatch();
+        batchHUD = new SpriteBatch();
 
         camera = new OrthographicCamera();
 
@@ -120,6 +125,16 @@ public class BonusScreen implements Screen {
         pelotas.add( new Texture("pelotas/pj4.png"));
         pelotas.add( new Texture("pelotas/pj5.png"));
 
+        textureMoneda = new Texture(Gdx.files.internal("trofeo.png"),true);
+        textureMoneda.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
+
+        int border = (int)(Gdx.graphics.getHeight() * 0.003f);
+        int size = (int)(Gdx.graphics.getHeight() * 0.025f);
+
+        parameter.size = size;
+        parameter.color = Color.WHITE;
+        parameter.borderWidth = border;
+        fontContMonedas = generator.generateFont(parameter);
         // FONDO
         fondo = new Texture("fondos/fondoBonus.png");
         rect = new Rectangle(0,0 , Gdx.graphics.getWidth() / PPM, fondo.getHeight()/PPM );
@@ -131,15 +146,12 @@ public class BonusScreen implements Screen {
         generatePelotas();
 
         // FONT
-        int size = (int)(Gdx.graphics.getHeight() * 0.05f);
+        int s = (int)(Gdx.graphics.getHeight() * 0.05f);
 
-        parameter.size = size;
+        parameter.size = s;
         parameter.color = Color.WHITE;
         font = generator.generateFont(parameter);
 
-        size = (int)(Gdx.graphics.getHeight() * 0.035f);
-        parameter.size = size;
-        font2 = generator.generateFont(parameter);
 
         Skin skin = new Skin(Gdx.files.internal("skins/flatearthui/flat-earth-ui.json"));
 
@@ -159,35 +171,35 @@ public class BonusScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
-        // Step the physics world.
         world.step(1/60f,6,2);
 
         debugRenderer.render(world,camera.combined);
 
-        // open the sprite batch buffer for drawing
         batch.begin();
 
         batch.draw(fondo,0,0,Gdx.graphics.getWidth() / PPM, fondo.getHeight()/PPM );
 
-        // iterate through each of the fruits
         for (int i = 0; i < pelotasBodies.size; i++) {
 
-            // get the physics body of the fruit
             Body body = pelotasBodies.get(i);
 
-            // get the position of the fruit from Box2D
             Vector2 position = body.getPosition();
 
-            // get the degrees of rotation by converting from radians
             float degrees = (float) Math.toDegrees(body.getAngle());
 
-            // draw the fruit on the screen
             drawSprite(pelotasSprites.get(i), position.x - pelotasSprites.get(i).getWidth()/2, position.y - pelotasSprites.get(i).getWidth()/2, degrees);
         }
 
         batch.end();
 
+        float widthMoneda = Gdx.graphics.getWidth()*0.06f;
+
+        batchHUD.begin();
+
+        batchHUD.draw(textureMoneda, Gdx.graphics.getWidth() * 0.05f, Gdx.graphics.getHeight() - Gdx.graphics.getHeight()*0.06f, widthMoneda, widthMoneda);
+        fontContMonedas.draw(batchHUD, "" + (cont + contMonedas), Gdx.graphics.getWidth() * 0.07f + widthMoneda,  Gdx.graphics.getHeight() - Gdx.graphics.getHeight()*0.035f );
+
+        batchHUD.end();
 
         actualizar();
     }
@@ -198,6 +210,7 @@ public class BonusScreen implements Screen {
         if((pelotasBodies.get(0).getPosition().y-((pelotas.get(0).getWidth()/2) /PPM) <= 0.9F && pelotasBodies.get(0).getLinearVelocity().y < 0) )
             if(cont>0) {
                 //Aplication.db.addTrofeos(contMonedas);
+                contMonedas += cont;
                 GameScreen.altura ++;
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
                 dispose();
@@ -207,7 +220,7 @@ public class BonusScreen implements Screen {
     public void input(){
         Vector2 vc;
         Circle cir;
-        if(Gdx.input.isTouched()) {
+        if(Gdx.input.justTouched()) {
             vc = new Vector2(getMousePosInGameWorld().x,getMousePosInGameWorld().y );
 
             if(rect.contains(vc)){
@@ -267,20 +280,19 @@ public class BonusScreen implements Screen {
 
         fixtureDef.shape = shape;
 
+        //Suelo
         ground = world.createBody(bodyDef);
         ground.createFixture(fixtureDef);
 
         ground.setTransform(0 / PPM, -1 / PPM, 0);
 
-        // techo
-
+        // Techo
         techo = world.createBody(bodyDef);
         techo.createFixture(fixtureDef);
 
         techo.setTransform( 0 / PPM, camera.viewportHeight +1/PPM, 0);
 
-        // pared izq
-
+        // Pared izq
         shape.setAsBox(1 / PPM, camera.viewportHeight);
 
         fixtureDef.shape = shape;
@@ -289,8 +301,7 @@ public class BonusScreen implements Screen {
 
         paredIzq.setTransform(-1 / PPM, 0 / PPM, 0);
 
-        // pared der
-
+        // Pared der
         fixtureDef.shape = shape;
         paredDer = world.createBody(bodyDef);
         paredDer.createFixture(fixtureDef);

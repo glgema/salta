@@ -56,7 +56,6 @@ public class GameOver implements Screen {
         stage = new Stage();
 
         VisTable table = new VisTable(false);
-        //table.setFillParent(true);
         stage.addActor(table);
 
 
@@ -119,7 +118,7 @@ public class GameOver implements Screen {
         font1.draw(batch, "Altura maxima: " + altMaxima , Gdx.graphics.getWidth() * 0.15f, Gdx.graphics.getHeight() * 0.65f);
 
         batch.end();
-        // Pinta la UI en la pantalla
+
         stage.act(dt);
         stage.draw();
     }

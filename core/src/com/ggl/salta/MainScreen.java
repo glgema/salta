@@ -53,7 +53,6 @@ public class MainScreen implements Screen {
 
     TextButton.TextButtonStyle textButtonStyle;
 
-
     // font
     public static BitmapFont font;
     public static BitmapFont font2;
@@ -61,11 +60,9 @@ public class MainScreen implements Screen {
     private FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/LemonMilk.otf"));
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-
     public MainScreen(Aplication game) {
         this.game = game;
     }
-
 
     private void generatePelotas() {
         for (int i = 0; i < pelotas.size; i++) {
@@ -203,40 +200,31 @@ public class MainScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
-        // Step the physics world.
         world.step(1/60f,6,2);
 
         debugRenderer.render(world,camera.combined);
 
-        // open the sprite batch buffer for drawing
         batch.begin();
 
-        // iterate through each of the fruits
         for (int i = 0; i < pelotasBodies.size; i++) {
 
-            // get the physics body of the fruit
             Body body = pelotasBodies.get(i);
 
-            // get the position of the fruit from Box2D
             Vector2 position = body.getPosition();
 
-            // get the degrees of rotation by converting from radians
             float degrees = (float) Math.toDegrees(body.getAngle());
 
-            // draw the fruit on the screen
             drawSprite(pelotasSprites.get(i), position.x - pelotasSprites.get(i).getWidth()/2, position.y - pelotasSprites.get(i).getWidth()/2, degrees);
         }
 
         batch.end();
 
 
-        // Pinta la UI en la pantalla
         stage.act(dt);
         stage.draw();
 
 
-        // gravedad
+        // Gravedad
         int vg=round( Gdx.input.getAccelerometerX());
         int vh=round( Gdx.input.getAccelerometerY());
         System.out.println(vg);
@@ -255,7 +243,6 @@ public class MainScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // Redimensiona la escena al redimensionar la ventana del juego
         stage.getViewport().update(width, height);
 
         batch.setProjectionMatrix(camera.combined);
@@ -329,7 +316,6 @@ public class MainScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Libera los recursos de la escena
         stage.dispose();
 
         world.dispose();

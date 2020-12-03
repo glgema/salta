@@ -13,7 +13,6 @@ public class Aspecto extends Sprite {
     public Texture textureD;
 
     public Aspecto(int precio, boolean desbloqueado, Texture textureB, Texture textureD) {
-        //super(texture);
         this.precio = precio;
         this.desbloqueado = desbloqueado;
 
