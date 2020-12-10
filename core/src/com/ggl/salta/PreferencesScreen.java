@@ -22,6 +22,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+import static com.ggl.salta.SplashScreen.music;
+
 
 public class PreferencesScreen implements Screen {
 
@@ -35,7 +37,6 @@ public class PreferencesScreen implements Screen {
 
     private OrthographicCamera camera;
     ExtendViewport viewport;
-
 
     // FONT
     public static BitmapFont font;
@@ -96,10 +97,21 @@ public class PreferencesScreen implements Screen {
 
 
         musica = new CheckBox("Musica", checkBoxStyle);
+        musica.setChecked(prefs.getBoolean("music"));
         musica.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                prefs.putBoolean("music", musica.isChecked());
+                if (musica.isChecked()) {
+                    if (!music.isPlaying()) {
+                        music.play();
+                    }
+                } else {
+                    if (music.isPlaying()) {
+                        music.stop();
+                    }
 
+                }
             }
         });
 
@@ -112,11 +124,13 @@ public class PreferencesScreen implements Screen {
             }
         });
 
-       volumen = new Slider(0, 20, 1, false,skin);
+       volumen = new Slider(0, 10, 1, false,skin);
+       volumen.setValue(prefs.getFloat("vol")*10);
        volumen.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                prefs.putFloat("vol", volumen.getValue()/10f);
+                music.setVolume(volumen.getValue()/10f);
             }
         });
 

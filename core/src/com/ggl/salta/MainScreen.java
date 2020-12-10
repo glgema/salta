@@ -23,6 +23,8 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+import static com.ggl.salta.PreferencesScreen.prefs;
+import static com.ggl.salta.SplashScreen.music;
 import static java.lang.Math.floor;
 import static java.lang.Math.round;
 
@@ -111,6 +113,12 @@ public class MainScreen implements Screen {
     @Override
     public void show() {
         Box2D.init();
+
+        if(prefs.getBoolean("music") && !music.isPlaying()) {
+            music.play();
+            music.setVolume(prefs.getFloat("vol"));
+            music.setLooping(true);
+        }
 
         batch = new SpriteBatch();
 

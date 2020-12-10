@@ -55,7 +55,7 @@ public class Personaje extends Sprite {
 
     public void saltar(){
         if(prefs.getBoolean("sound"))
-            botar.play(1);
+            botar.play(prefs.getFloat("vol"));
 
 
         b2body.setLinearVelocity(new Vector2(b2body.getLinearVelocity().x, 8.5f ));

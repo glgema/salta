@@ -2,6 +2,7 @@ package com.ggl.salta;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,6 +28,7 @@ public class SplashScreen implements Screen {
     public static Array<Texture> powerUps = new Array<>();
 
     public static Sound botar;
+    public static Music music;
 
     public SplashScreen(Aplication game) {
         this.game = game;
@@ -37,6 +39,7 @@ public class SplashScreen implements Screen {
 
         cargarArrays();
         botar = Gdx.audio.newSound(Gdx.files.internal("sonidos/botar.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("sonidos/musica.mp3"));
     }
 
     public void cargarArrays(){
